@@ -1,11 +1,12 @@
+import os
 import telebot
 from telebot import types
 import logging
 from telegram_game.redis_game import RedisGame, RedisField
 import json
 
-token_file = open('token')
-TOKEN = token_file.read()
+
+TOKEN = os.environ.get('TOKEN')
 bot = telebot.TeleBot(TOKEN)
 logger = logging.getLogger(__name__)
 
