@@ -23,18 +23,15 @@ class Game(RedisGame):
         print(self.currentPoint)
         await self.send('Let`s play the Game!')
 
-
         while True:
             msg = await self.recv()
             chat_id = msg['message']['chat']['id']
             print(self.currentPoint)
             msg_text = msg['message']['text']
-            self.currentPoint = self.point_definition(msg_text)
+            self.currentPoint = self.point_definition(msg_text, chat_id)
             self.send_message(chat_id)
 
-
-
-    def point_definition(self, msg_text):
+    def point_definition(self, msg_text, chat_id):
         self.last_point = self.currentPoint
         ans_one = script[self.last_point]['textBtnOne']
         callback_one = script[self.last_point]['CallbackDataBtnOne']
@@ -45,7 +42,8 @@ class Game(RedisGame):
         elif msg_text == ans_two:
             return int(callback_two)
         else:
-            return 0
+            bot.send_message(chat_id, text='Пожалуйста, выберите один из ответов ниже.')
+            return self.last_point
 
     def send_message(self, chat_id):
         key = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
